@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - GPS Bus Tracking</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #6366f1;
+            --accent-color: #8b5cf6;
+            --success-color: #22c55e;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            color: #fff;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #fff, transparent);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-form:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 2.3rem;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group input:focus + i,
+        .form-group textarea:focus + i {
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+            padding-left: 2.5rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-info:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .info-item i {
+            font-size: 1.5rem;
+            color: #e0e7ff;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover i {
+            transform: rotate(360deg);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .map-container {
+            margin-top: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.2), transparent);
+            pointer-events: none;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(34, 197, 94, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .info-item {
+                padding: 0.8rem;
+            }
+
+            .info-item i {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Contact Us</h1>
+            <p>Get in touch with us for any inquiries or support. We're here to help!</p>
+        </div>
+
+        <div class="contact-wrapper">
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required>
+                        <i data-lucide="user"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required>
+                        <i data-lucide="mail"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" required>
+                        <i data-lucide="message-circle"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                        <i data-lucide="message-square"></i>
+                    </div>
+                    <button type="submit">
+                        <i data-lucide="send"></i> Send Message
+                    </button>
+                    <div class="success-message" id="successMessage">
+                        <i data-lucide="check-circle"></i> Thank you for your message! We'll get back to you soon.
+                    </div>
+                </form>
+            </div>
+
+            <div class="contact-info">
+                <h2 style="margin-bottom: 2rem;">Contact Information</h2>
+                <div class="info-item">
+                    <i data-lucide="map-pin"></i>
+                    <div>
+                        <h3>Address</h3>
+                        <p>Krishnankovil , Tamil Nadu - 626 138</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i data-lucide="phone"></i>
+                    <div>
+                        <h3>Phone</h3>
+                        <p>+91 8220416912</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i data-lucide="mail"></i>
+                    <div>
+                        <h3>Email</h3>
+                        <p>rajamuniya43@gmail.com</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i data-lucide="clock"></i>
+                    <div>
+                        <h3>Working Hours</h3>
+                        <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+                
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <i data-lucide="facebook"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i data-lucide="twitter"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i data-lucide="linkedin"></i>
+                    </a>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Reset form
+            this.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        });
+
+        // Add floating effect to form inputs
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+                this.parentElement.querySelector('i').style.color = '#fff';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+                this.parentElement.querySelector('i').style.color = 'rgba(255, 255, 255, 0.6)';
+            });
+        });
+    </script>
+</body>
+</html>

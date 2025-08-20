@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final CGPA Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: .5rem;
+            background: linear-gradient(to right, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: min(95%, 400px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: .5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-group {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .result h3 {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
+        }
+
+        #finalCGPA {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            input {
+                padding: 10px 14px;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Final CGPA Calculator</h2>
+    <div class="container">
+        <p>Enter CGPA for Each Semester:</p>
+        <input type="number" id="sem1" placeholder="Semester 1 CGPA">
+        <input type="number" id="sem2" placeholder="Semester 2 CGPA">
+        <input type="number" id="sem3" placeholder="Semester 3 CGPA">
+        <input type="number" id="sem4" placeholder="Semester 4 CGPA">
+        <input type="number" id="sem5" placeholder="Semester 5 CGPA">
+        <input type="number" id="sem6" placeholder="Semester 6 CGPA">
+        <input type="number" id="sem7" placeholder="Semester 7 CGPA">
+        <input type="number" id="sem8" placeholder="Semester 8 CGPA">
+        
+        <button class="calculate-btn" onclick="calculateFinalCGPA()">Calculate Final CGPA</button>
+        <h3 style="text-align: center;">Your Final CGPA: <span id="finalCGPA">0</span></h3>
+        
+        <button class="reset-btn" onclick="resetCGPA()">Reset</button>
+    </div>
+
+    <script>
+        function calculateFinalCGPA() {
+            let totalCGPA = 0;
+            let count = 0;
+
+            for (let i = 1; i <= 8; i++) {
+                let semCGPA = document.getElementById(`sem${i}`).value;
+                if (semCGPA) {
+                    totalCGPA += parseFloat(semCGPA);
+                    count++;
+                }
+            }
+
+            let finalCGPA = count > 0 ? (totalCGPA / count).toFixed(2) : 0;
+            document.getElementById("finalCGPA").innerText = finalCGPA;
+
+            // Store in local storage
+            localStorage.setItem("finalCGPA", finalCGPA);
+        }
+
+        function resetCGPA() {
+            for (let i = 1; i <= 8; i++) {
+                document.getElementById(`sem${i}`).value = "";
+            }
+            document.getElementById("finalCGPA").innerText = "0";
+            localStorage.removeItem("finalCGPA");
+        }
+
+        // Load stored CGPA (if available)
+        window.onload = function () {
+            let storedCGPA = localStorage.getItem("finalCGPA");
+            if (storedCGPA) {
+                document.getElementById("finalCGPA").innerText = storedCGPA;
+            }
+        };
+    </script>
+
+</body>
+</html>

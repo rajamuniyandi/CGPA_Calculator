@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculation</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Logo Styles */
+        .logo {
+            position: absolute;
+            top: clamp(10px, 3vw, 20px);
+            right: clamp(10px, 3vw, 20px);
+            width: clamp(60px, 8vw, 80px);
+            height: clamp(60px, 8vw, 80px);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background-image: url('logo.jpg');
+            background-size: cover;
+            background-position: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .logo:hover {
+            width: clamp(120px, 150vw, 147px);
+            height: clamp(60px, 8vw, 80px);
+            border-radius: 12px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: translateY(2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Card Container */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
+                        0 1px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            width: min(95%, 450px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Typography */
+        .card h1 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 0.5em;
+            background: linear-gradient(135deg, #1a365d, #4f46e5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.3;
+        }
+
+        .card p {
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            color: #666;
+            margin-bottom: 2em;
+            line-height: 1.6;
+        }
+
+        /* Button Styles */
+        .btn1 {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin: 0 auto 2em;
+            perspective: 600px;
+        }
+
+        .box {
+            width: clamp(35px, 8vw, 45px);
+            height: clamp(35px, 8vw, 40px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-weight: 600;
+            color: #fff;
+            background: #2d3748;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .box:before {
+            content: attr(data-letter);
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .box:nth-child(even):before {
+            transform: translateY(-100%);
+        }
+
+        .btn1:hover .box:before {
+            transform: translateY(0);
+        }
+
+        /* Semester List */
+        .semesters {
+            display: none;
+            margin-top: 1.5em;
+            grid-gap: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .semester-link {
+            display: block;
+            text-decoration: none;
+            background: white;
+            color: #4f46e5;
+            border: 2px solid #4f46e5;
+            padding: clamp(8px, 2vw, 12px);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .semester-link:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: #4f46e5;
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .semester-link:hover {
+            color: white;
+        }
+
+        .semester-link:hover:before {
+            width: 100%;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .btn1 {
+                gap: 2px;
+            }
+
+            .box {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .semester-link {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .logo{
+                display:block;
+            }
+            .logo:hover{
+                display:block;
+                border: none;
+                width: 110px;
+                border-radius: 10px;
+            }
+        }
+
+        @media screen and (max-width: 350px) {
+            .card h1 {
+                font-size: 1.3rem;
+            }
+
+            .card p {
+                font-size: 0.85rem;
+            }
+
+            .box {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Animation for semester list */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .semesters.show {
+            display: grid;
+            animation: slideDown 0.5s ease-out forwards;
+        }
+        /* Specific Styles for Result Section */
+.result-heading {
+    margin-bottom: -15px; /* Adjust the margin to reduce space */
+}
+
+.result-select {
+    margin-top: 0; /* Remove top margin to reduce space */
+}
+.result{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    gap: 1em;
+    animation: fadeIn 0.5s ease-out;
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
+                0 1px 8px rgba(0, 0, 0, 0.05);
+                
+}
+@media screen and (max-width: 480px) {
+    .result {
+        width: 90%;
+    }
+    .result-select {
+        width: 70%;
+    }
+}
+        /* Touch Ripple Effect */
+        .ripple {
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+    
+}
+    </style>
+</head>
+<body>
+    <div class="logo"></div>
+
+    <div class="card">
+        <h1>Welcome to CGPA Calculation System</h1>
+        <p>Calculate your CGPA with PERCENTAGE %</p>
+        
+        <div class="btn1" onclick="toggleSemesters()">
+            <div class="box" data-letter="C">S</div>
+            <div class="box" data-letter="L">T</div>
+            <div class="box" data-letter="I">A</div>
+            <div class="box" data-letter="C">R</div>
+            <div class="box" data-letter="K">T</div>
+        </div>
+
+        <div class="semesters" id="semesterList">
+            <a href="cgp1.html" class="semester-link">Semester 1</a>
+            <a href="cgp2.html" class="semester-link">Semester 2</a>
+            <a href="cgp3.html" class="semester-link">Semester 3</a>
+            <a href="cgp4.html" class="semester-link">Semester 4</a>
+            <a href="cgp5.html" class="semester-link">Semester 5</a>
+            <a href="cgp6.html" class="semester-link">Semester 6</a>
+            <a href="cgp7.html" class="semester-link">Semester 7</a>
+            <a href="cgp8.html" class="semester-link">Semester 8</a>
+        </div><br><br>
+    </div>
+    <p class="result-heading" style="color: white; font-weight: bold; margin-bottom: 10px; margin-top: 10px;">GET YOUR RESULT: </p>
+    <div class="result" style="margin-top: 0; margin-bottom: 0;">
+        
+        <select id="result" class="result-select" style="width: 90%; padding: 7px; border-radius: 7px; margin:0;">
+            <option value="0">Choose Semester</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <button type="button" onclick="getresult()" style="width: 40px; padding: 5px; border: none; background: linear-gradient(135deg, #3b82f6, #cb63cf); color: white; border-radius: 7px;">Go</button>
+    </div>
+
+    <script>
+        function toggleSemesters() {
+            const semesterList = document.getElementById("semesterList");
+            semesterList.style.display = semesterList.style.display === "none" || 
+                                       semesterList.style.display === "" ? "grid" : "none";
+            
+            if (semesterList.style.display === "grid") {
+                semesterList.classList.add("show");
+            } else {
+                semesterList.classList.remove("show");
+            }
+        }
+
+        // Add touch ripple effect for mobile devices
+        document.querySelectorAll('.semester-link').forEach(button => {
+            button.addEventListener('touchstart', e => {
+                const rect = button.getBoundingClientRect();
+                const x = e.touches[0].clientX - rect.left;
+                const y = e.touches[0].clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `
+                    position: absolute;
+                    background: rgba(255, 255, 255, 0.7);
+                    transform: translate(-50%, -50%);
+                    pointer-events: none;
+                    border-radius: 50%;
+                    width: ${button.offsetWidth * 2}px;
+                    height: ${button.offsetWidth * 2}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                `;
+                
+                ripple.classList.add('ripple');
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+        function getresult(){
+    const res1=parseInt(document.getElementById(`result`).value);
+    switch(res1){
+        case 1:
+            window.location.href ='http://results.worldcolleges.info/psrresults/may2022/index.php';
+            break;
+        case 2:
+            window.location.href ='http://results.worldcolleges.info/psrresults/june2022/index.php';
+            break;
+        case 3:
+            window.location.href ='http://results.worldcolleges.info/psrresults/nov2022/index.php';
+            break;
+        case 4:
+            window.location.href ='http://results.worldcolleges.info/psrresults/apr2023/index.php';
+            break;
+        case 5:
+            window.location.href ='http://results.worldcolleges.info/psrresults/nov2023/index.php';
+            break;
+        case 6:
+            window.location.href ='https://results.worldcolleges.info/psrresults/apr2024/index.php';
+            break;
+        case 7:
+            window.location.href ='https://results.worldcolleges.info/psrresults/nov2024/index.php';
+            break;
+        case 8:
+            window.location.href ='https://results.worldcolleges.info/psrresults/apr2025/index.php';
+            break;
+        default:
+            break;
+    }
+}
+    </script>
+</body>
+</html>
